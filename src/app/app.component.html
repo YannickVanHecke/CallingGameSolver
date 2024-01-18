@@ -185,9 +185,13 @@
       <br/>
       <textarea [(ngModel)]="Assignment"></textarea>
 
-      {{Assignment}}
-
       <button (click)="solve()">Los het belspel op!</button>
+      <div>
+        {{solution}}
+      </div>
+      <div>
+        {{explanation}}
+      </div>
   </div>
 </main>
 

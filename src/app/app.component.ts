@@ -9,6 +9,9 @@ import { CallGameService } from '../services/CallGameService';
 })
 export class AppComponent {
   title = 'Los het belspel op';
+  solution = 0;
+  explanation = "";
+
 
   public Assignment: string = "";
 
@@ -21,6 +24,7 @@ export class AppComponent {
   }
 
   public solve() {
-    
+    this.solution = 100;
+    this.explanation = "Uitleg om tot de oplos te komen";
   }
 }
