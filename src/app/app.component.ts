@@ -6,5 +6,19 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'CallingGameSolver';
+  title = 'Los het belspel op';
+
+  public Assignment: string = "";
+
+  /**
+   *
+   */
+  constructor() {
+
+    this.Assignment = "VANNACHT WEER" + "<br/>EEN WINNAAR!<br/><br/>DRIEëndertig gedeeld door 3 + 199 - 9 + TIEN";
+  }
+
+  public solve() {
+
+  }
 }
