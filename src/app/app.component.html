@@ -186,8 +186,13 @@
       <textarea [(ngModel)]="Assignment"></textarea>
 
       <button (click)="solve()">Los het belspel op!</button>
-      <div>
+      <div *ngIf="solution.Items.length > 0">
         <table>
+          <tr>
+            <th>Stap</th>
+            <th>Oplossing</th>
+            <th>Uitleg</th>
+          </tr>
           <tr *ngFor="let row of solution.Items">
             <td>{{row.Order}}</td>
             <td>{{row.Solution}}</td>
