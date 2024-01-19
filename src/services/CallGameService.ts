@@ -26,7 +26,9 @@ export class CallGameService {
 
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
         console.clear();
-        const assignmentWithoutSpacing = assignment.toLowerCase().replaceAll(" ", "");
+        const assignmentWithoutSpacing = assignment.toLowerCase()
+            .replaceAll(" ", "")
+            .replaceAll("ë", "e");
         const assigmentWithoutSpacingLength = assignmentWithoutSpacing.length;
         var sortedWrittenNumbersByTextLength = this.WrittenNumbers.sort((a, b) => b.Length - a.Length);
         console.log(sortedWrittenNumbersByTextLength);
