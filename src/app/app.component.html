@@ -20,19 +20,15 @@
     --gray-700: oklch(36.98% 0.014 302.71);
     --gray-400: oklch(70.9% 0.015 304.04);
 
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(
-      180deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
+    --red-to-pink-to-purple-vertical-gradient: linear-gradient(180deg,
+        var(--orange-red) 0%,
+        var(--vivid-pink) 50%,
+        var(--electric-violet) 100%);
 
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
-      90deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
+    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(90deg,
+        var(--orange-red) 0%,
+        var(--vivid-pink) 50%,
+        var(--electric-violet) 100%);
 
     --pill-accent: var(--bright-blue);
 
@@ -133,9 +129,11 @@
   .pill-group .pill:nth-child(6n + 1) {
     --pill-accent: var(--bright-blue);
   }
+
   .pill-group .pill:nth-child(6n + 2) {
     --pill-accent: var(--french-violet);
   }
+
   .pill-group .pill:nth-child(6n + 3),
   .pill-group .pill:nth-child(6n + 4),
   .pill-group .pill:nth-child(6n + 5) {
@@ -178,33 +176,33 @@
 </style>
 
 <main class="main">
-  
-  <div class="content">
-    <h1>{{ title }}</h1>    
-      <br/>
-      <br/>
-      <textarea [(ngModel)]="Assignment" class="Assignment"></textarea>
-      <br/>
-      <button (click)="solve()">Los het belspel op!</button>
-      <div *ngIf="solution.Items.length > 0">
-        <table>
-          <tr>
-            <th>Stap</th>
-            <th>Oplossing</th>
-            <th>Uitleg</th>
-          </tr>
-          <tr *ngFor="let row of solution.Items">
-            <td>{{row.Order}}</td>
-            <td>{{row.Solution}}</td>
-            <td>{{row.Explanation}}</td>
-          </tr>
-          <tr>
-            <td>Totaal</td>
-            <td>{{solution.Items | TotalPipe}}</td>
-            <td></td>
-          </tr>
-        </table>
-      </div>
+
+  <div class="assigmentBlock">
+    <h1>{{ title }}</h1>
+    <br />
+    <br />
+    <textarea [(ngModel)]="Assignment" class="Assignment"></textarea>
+    <br />
+    <button (click)="solve()">Los het belspel op!</button>
+  </div>
+  <div *ngIf="solution.Items.length > 0" class="solutionItemBlock">
+    <table>
+      <tr>
+        <th>Stap</th>
+        <th>Oplossing</th>
+        <th>Uitleg</th>
+      </tr>
+      <tr *ngFor="let row of solution.Items">
+        <td>{{row.Order}}</td>
+        <td>{{row.Solution}}</td>
+        <td>{{row.Explanation}}</td>
+      </tr>
+      <tr>
+        <td>Totaal</td>
+        <td>{{solution.Items | TotalPipe}}</td>
+        <td></td>
+      </tr>
+    </table>
   </div>
 </main>
 
