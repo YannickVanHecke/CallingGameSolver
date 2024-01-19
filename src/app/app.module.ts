@@ -7,16 +7,18 @@ import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { TotalPipe } from '../pipes/TotalPipe';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TotalPipe
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [TotalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,12 +1,12 @@
 export class SolutionItem { 
-    public Order: Number = 0;
-    public Solution: Number = 0;
+    public Order: number = 0;
+    public Solution: number = 0;
     public Explanation: string = "";
 
     /**
      *
      */
-    constructor(order: Number, solution: Number, explanation: string) {
+    constructor(order: number, solution: number, explanation: string) {
         this.Order = order;
         this.Solution = solution;
         this.Explanation = explanation;
