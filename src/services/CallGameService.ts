@@ -19,12 +19,12 @@ export class CallGameService {
         this.stepIndex = 1;
         var solution = new Solution();
 
-        solution = this.solveWrittenNumber(assignment, solution);
-        
+        solution = this.solveWrittenNumbers(assignment, solution);
+        solution = this.solveNumericNumbers(assignment, solution);
         return solution;
     }
 
-    private solveWrittenNumber(assignment: string, solution: Solution): Solution {
+    private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
         console.clear();
         const assignmentWithoutSpacing = assignment.toLowerCase().replaceAll(" ", "");
         const assigmentWithoutSpacingLength = assignmentWithoutSpacing.length;
@@ -33,8 +33,6 @@ export class CallGameService {
         var maxLengthWrittenNumbers = this.WrittenNumbers.sort((a, b) => a.Length - b.Length)[0];
         console.log("maxLengthWrittenNumbers: " + maxLengthWrittenNumbers);
         console.log("assignmentWithoutSpacing: " + assignmentWithoutSpacing);
-
-        
 
         this.WrittenNumbers.forEach(wn => {
             if (assignmentWithoutSpacing.indexOf(wn.Text) !== -1) {
@@ -45,6 +43,20 @@ export class CallGameService {
 
         return solution;
     
+    }
+
+    private solveNumericNumbers(assignment: string, solution: Solution): Solution {
+        var words = assignment.split(" ");
+
+        words.forEach(word => {
+            if (parseInt(word)) {
+                var number = parseInt(word);
+                solution.Items.push(new SolutionItem(this.stepIndex, number, word + " -> " + number));
+                this.stepIndex++;
+            }
+        });
+
+        return solution;
     }
 
     private InitiateWrittenNumbers() {
