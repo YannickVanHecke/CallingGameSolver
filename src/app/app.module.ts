@@ -20,7 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FormsModule,
     MatExpansionModule,
   ],
-  providers: [TotalPipe],
+  providers: [StepTotalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
