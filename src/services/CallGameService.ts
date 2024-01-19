@@ -16,7 +16,7 @@ export class CallGameService {
     }
 
     public solve(assignment: string): Solution {
-
+        this.stepIndex = 1;
         var solution = new Solution();
 
         solution = this.solveWrittenNumber(assignment, solution);
