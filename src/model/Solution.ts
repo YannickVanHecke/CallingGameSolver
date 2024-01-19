@@ -1,9 +1,9 @@
-import { SolutionItem } from "./SolutionItem";
+import { Step } from "./Step";
 
 export class Solution {
-    public Items: Array<SolutionItem>;
+    public Steps: Array<Step>;
 
     constructor() {
-        this.Items = new Array<SolutionItem>();
+        this.Steps = new Array<Step>();
     }
 }

@@ -7,16 +7,18 @@ import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { TotalPipe } from '../pipes/TotalPipe';
+import { StepTotalPipe } from '../pipes/StepTotalPipe';
+import { MatExpansionModule } from '@angular/material/expansion';
 @NgModule({
   declarations: [
     AppComponent,
-    TotalPipe
+    StepTotalPipe
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     FormsModule,
+    MatExpansionModule,
   ],
   providers: [TotalPipe],
   bootstrap: [AppComponent]

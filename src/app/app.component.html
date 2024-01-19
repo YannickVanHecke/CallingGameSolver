@@ -185,24 +185,29 @@
     <br />
     <button (click)="solve()">Los het belspel op!</button>
   </div>
-  <div *ngIf="solution.Items.length > 0" class="solutionItemBlock">
-    <table>
-      <tr>
-        <th>Stap</th>
-        <th>Oplossing</th>
-        <th>Uitleg</th>
-      </tr>
-      <tr *ngFor="let row of solution.Items">
-        <td>{{row.Order}}</td>
-        <td>{{row.Solution}}</td>
-        <td>{{row.Explanation}}</td>
-      </tr>
-      <tr>
-        <td>Totaal</td>
-        <td>{{solution.Items | TotalPipe}}</td>
-        <td></td>
-      </tr>
-    </table>
+  <div *ngIf="solution.Steps.length > 0" class="solutionItemBlock">
+    <div *ngFor="let step of solution.Steps">
+      {{step.Name}}
+      <br/>
+      <table>
+        <tr>
+          <th>Stap</th>
+          <th>Oplossing</th>
+          <th>Uitleg</th>
+        </tr>
+        <tr *ngFor="let row of step.Items">
+          <td>{{row.Order}}</td>
+          <td>{{row.Solution}}</td>
+          <td>{{row.Explanation}}</td>
+        </tr>
+        <tr>
+          <td>Totaal</td>
+          <td>{{step.Items | StepTotalPipe}}</td>
+          <td></td>
+        </tr>
+      </table>
+      <br/>
+    </div>
   </div>
 </main>
 

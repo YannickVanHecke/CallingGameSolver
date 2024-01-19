@@ -3,6 +3,7 @@ import { WrittenNumber } from "../model/WrittenNumber";
 import { Solution } from "../model/Solution";
 import { max } from "rxjs";
 import { SolutionItem } from "../model/SolutionItem";
+import { Step } from "../model/Step";
 
 @Injectable()
 export class CallGameService {
@@ -25,6 +26,8 @@ export class CallGameService {
     }
 
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
+        var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking, zowel geschreven als in cijfers");
+
         console.clear();
         const assignmentWithoutSpacing = assignment.toLowerCase()
             .replaceAll(" ", "")
@@ -38,25 +41,32 @@ export class CallGameService {
 
         this.WrittenNumbers.forEach(wn => {
             if (assignmentWithoutSpacing.indexOf(wn.Text) !== -1) {
-                solution.Items.push(new SolutionItem(this.stepIndex, wn.Value, wn.Explanation));
+                stepWrittenNumbers.Items.push(new SolutionItem(this.stepIndex, wn.Value, wn.Explanation));
                 this.stepIndex++;
             }
         });
+        solution.Steps.push(stepWrittenNumbers);
+
+
 
         return solution;
     
     }
 
     private solveNumericNumbers(assignment: string, solution: Solution): Solution {
+        var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel in cijfers als in tekst");
+
         var words = assignment.split(" ");
 
         words.forEach(word => {
             if (parseInt(word)) {
                 var number = parseInt(word);
-                solution.Items.push(new SolutionItem(this.stepIndex, number, word + " -> " + number));
+                step.Items.push(new SolutionItem(this.stepIndex, number, word + " -> " + number));
                 this.stepIndex++;
             }
         });
+
+        solution.Steps.push(step);
 
         return solution;
     }

@@ -28,5 +28,6 @@ export class AppComponent {
 
   public solve() {
     this.solution = this.callGameService.solve(this.Assignment);
+    console.log(this.solution);
   }
 }
