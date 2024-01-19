@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CallGameService } from '../services/CallGameService';
+import { Solution } from '../model/Solution';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +10,12 @@ import { CallGameService } from '../services/CallGameService';
 })
 export class AppComponent {
   title = 'Los het belspel op';
-  solution = 0;
-  explanation = "";
+  solution: Solution = new Solution();
+  
 
 
   public Assignment: string = "";
+
 
   /**
    *
@@ -21,10 +23,10 @@ export class AppComponent {
   constructor(private callGameService: CallGameService) {
 
     this.Assignment = "VANNACHT WEER" + "<br/>EEN WINNAAR!<br/><br/>DRIEëndertig gedeeld door 3 + 199 - 9 + TIEN";
+    
   }
 
   public solve() {
-    this.solution = 100;
-    this.explanation = "Uitleg om tot de oplos te komen";
+    this.solution = this.callGameService.solve(this.Assignment);
   }
 }

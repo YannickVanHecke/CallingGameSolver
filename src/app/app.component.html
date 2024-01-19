@@ -187,10 +187,13 @@
 
       <button (click)="solve()">Los het belspel op!</button>
       <div>
-        {{solution}}
-      </div>
-      <div>
-        {{explanation}}
+        <table>
+          <tr *ngFor="let row of solution.Items">
+            <td>{{row.Order}}</td>
+            <td>{{row.Solution}}</td>
+            <td>{{row.Explanation}}</td>
+          </tr>
+        </table>
       </div>
   </div>
 </main>
