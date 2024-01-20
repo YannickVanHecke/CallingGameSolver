@@ -13,6 +13,7 @@ export class CallGameService {
     constructor() {
         this.InitiateWrittenNumbers();
         this.InitiateRomanicNumbers();
+        this.InitiateHiddenRomanicNumber();
     }
 
     public solve(assignment: string): Solution {
@@ -21,6 +22,7 @@ export class CallGameService {
 
         solution = this.solveWrittenNumbers(assignment, solution);
         solution = this.solveNumericNumbers(assignment, solution);
+        solution = this.solveRomanicNumbers(assignment, solution);
         return solution;
     }
 
@@ -70,6 +72,12 @@ export class CallGameService {
         return solution;
     }
 
+    private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
+        
+        
+        return solution;
+    }
+
     private InitiateWrittenNumbers() {
         this.WrittenNumbers.push(new WrittenNumber("nul", 0, "nul -> 0"));
         this.WrittenNumbers.push(new WrittenNumber("een", 1, "een -> 1"));
@@ -107,5 +115,9 @@ export class CallGameService {
         this.RomanicNumber.push(new WrittenNumber("C", 100, "C -> 100"));
         this.RomanicNumber.push(new WrittenNumber("D", 500, "D -> 500"));
         this.RomanicNumber.push(new WrittenNumber("M", 1000, "M -> 1000"));
+    }
+
+    private InitiateHiddenRomanicNumber() {
+
     }
 }
