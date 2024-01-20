@@ -1,7 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { WrittenNumber } from "../model/WrittenNumber";
 import { Solution } from "../model/Solution";
-import { max } from "rxjs";
 import { SolutionItem } from "../model/SolutionItem";
 import { Step } from "../model/Step";
 
