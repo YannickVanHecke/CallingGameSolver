@@ -73,8 +73,11 @@ export class CallGameService {
     }
 
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
+        var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
         
         
+
+        solution.Steps.push(step);
         return solution;
     }
 
@@ -110,7 +113,7 @@ export class CallGameService {
     private InitiateRomanicNumbers() {
         this.RomanicNumber.push(new WrittenNumber("I", 1, "I -> 1"));
         this.RomanicNumber.push(new WrittenNumber("V", 5, "V -> 5"));
-        this.RomanicNumber.push(new WrittenNumber("X",  10, "X -> 10"));
+        this.RomanicNumber.push(new WrittenNumber("X", 10, "X -> 10"));
         this.RomanicNumber.push(new WrittenNumber("L", 50, "L -> 50"));
         this.RomanicNumber.push(new WrittenNumber("C", 100, "C -> 100"));
         this.RomanicNumber.push(new WrittenNumber("D", 500, "D -> 500"));
