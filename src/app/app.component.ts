@@ -23,7 +23,7 @@ export class AppComponent {
    */
   constructor(private callGameService: CallGameService) {
 
-    this.Assignment = "VANNACHT WEER" + "<br/>EEN WINNAAR!<br/><br/>DRIEëndertig gedeeld door 3 + 199 - 9 + TIEN";
+    this.Assignment = "VANNACHT WEER EEN WINNAAR! DRIEëndertig gedeeld door 3 + 199 - 9 + TIEN. De 1ste viert";
     
   }
 

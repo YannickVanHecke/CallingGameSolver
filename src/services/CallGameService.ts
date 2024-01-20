@@ -3,12 +3,13 @@ import { WrittenNumber } from "../model/WrittenNumber";
 import { Solution } from "../model/Solution";
 import { SolutionItem } from "../model/SolutionItem";
 import { Step } from "../model/Step";
+import { RomanicNumber } from "../model/RomanicNumber";
 
 @Injectable()
 export class CallGameService {
     private stepIndex: number = 1;
     private WrittenNumbers: Array<WrittenNumber> = new Array<WrittenNumber>();
-    private RomanicNumber: Array<WrittenNumber> = new Array<WrittenNumber>();
+    private RomanicNumbers: Array<RomanicNumber> = new Array<RomanicNumber>();
 
     constructor() {
         this.InitiateWrittenNumbers();
@@ -51,7 +52,7 @@ export class CallGameService {
 
 
         return solution;
-    
+
     }
 
     private solveNumericNumbers(assignment: string, solution: Solution): Solution {
@@ -73,9 +74,35 @@ export class CallGameService {
     }
 
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
+        console.clear();
+        console.log(assignment);
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
-        
-        
+
+        var words = assignment.split(" ");
+        var romanicNumbers = new Array<RomanicNumber>();
+
+        var wordLine = "";
+        words.forEach(word => {
+            var result = 0;
+            wordLine = word + " => ["
+            word.toUpperCase().split("").forEach(character => {
+                var romanicCharacters = this.RomanicNumbers.map(rn => rn.Text);
+                if (romanicCharacters.indexOf(character) !== -1) {
+                    // TODO: vergelijken adhv ascii waarde.
+                    var numericValue = this.RomanicNumbers.find(rn => rn.Text.charCodeAt() === character. charCodeAt())?.Value;
+                    if (numericValue !== undefined) {
+                        result += numericValue;
+                        wordLine += ", " + character + " => " + numericValue;
+                    }
+                }
+            });
+            wordLine = wordLine.replace(word + " => [, ", word + " => [ ");
+            wordLine += " ]";
+            step.Items.push(new SolutionItem(this.stepIndex, result, wordLine));
+            this.stepIndex++;
+        });
+
+
 
         solution.Steps.push(step);
         return solution;
@@ -111,13 +138,13 @@ export class CallGameService {
     }
 
     private InitiateRomanicNumbers() {
-        this.RomanicNumber.push(new WrittenNumber("I", 1, "I -> 1"));
-        this.RomanicNumber.push(new WrittenNumber("V", 5, "V -> 5"));
-        this.RomanicNumber.push(new WrittenNumber("X", 10, "X -> 10"));
-        this.RomanicNumber.push(new WrittenNumber("L", 50, "L -> 50"));
-        this.RomanicNumber.push(new WrittenNumber("C", 100, "C -> 100"));
-        this.RomanicNumber.push(new WrittenNumber("D", 500, "D -> 500"));
-        this.RomanicNumber.push(new WrittenNumber("M", 1000, "M -> 1000"));
+        this.RomanicNumbers.push(new RomanicNumber("I", 1, "I -> 1", 1));
+        this.RomanicNumbers.push(new RomanicNumber("V", 5, "V -> 5", 2));
+        this.RomanicNumbers.push(new RomanicNumber("X", 10, "X -> 10", 3));
+        this.RomanicNumbers.push(new RomanicNumber("L", 50, "L -> 50", 4));
+        this.RomanicNumbers.push(new RomanicNumber("C", 100, "C -> 100", 5));
+        this.RomanicNumbers.push(new RomanicNumber("D", 500, "D -> 500", 6));
+        this.RomanicNumbers.push(new RomanicNumber("M", 1000, "M -> 1000", 7));
     }
 
     private InitiateHiddenRomanicNumber() {
