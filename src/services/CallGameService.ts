@@ -8,7 +8,7 @@ import { RomanicNumber } from "../model/RomanicNumber";
 @Injectable()
 export class CallGameService {
     private stepIndex: number = 1;
-    
+
     private WrittenNumbers: Array<WrittenNumber> = new Array<WrittenNumber>();
     private RomanicNumbers: Array<RomanicNumber> = new Array<RomanicNumber>();
     private HiddenRomanicNumbers: Array<RomanicNumber> = new Array<RomanicNumber>();
@@ -79,7 +79,6 @@ export class CallGameService {
 
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
         console.clear();
-        console.log(assignment);
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
         var words = assignment.split(" ");
         var wordLine = "";
@@ -89,11 +88,12 @@ export class CallGameService {
             word.split("").forEach(character => {
                 var romanicCharacters = this.RomanicNumbers.map(rn => rn.Text);
                 if (romanicCharacters.indexOf(character) !== -1) {
-                    var numericValue = this.RomanicNumbers.find(rn => 
-                        rn.Text.charCodeAt(0) === character.charCodeAt(0))?.Value;
+                    var romanicCharacter = this.RomanicNumbers.find(rn =>
+                        rn.Text.charCodeAt(0) === character.charCodeAt(0));
+                    var numericValue = romanicCharacter?.Value;
                     if (numericValue !== undefined) {
                         result += numericValue;
-                        wordLine += ", " + character + " => " + numericValue;
+                        wordLine += ", " + this.FormatExplantionForRomanicCharacters(romanicCharacter?.Explanation);
                     }
                 }
             });
@@ -108,7 +108,32 @@ export class CallGameService {
     }
 
     private SolveHiddenRomanicNumbers(assignment: string, solution: Solution): Solution {
-        
+        console.clear();
+        var step = new Step("Tel alle romeinse cijfers op die verborgen zitten in cijfers en letters");
+        var words = assignment.split(" ");
+        var wordLine = "";
+        words.forEach(word => {
+            var result = 0;
+            wordLine = word + " => ["
+            word.split("").forEach(character => {
+                var hiddenRomanicCharacters = this.HiddenRomanicNumbers.map(rn => rn.Text);
+                if (hiddenRomanicCharacters.indexOf(character) !== -1) {
+                    var hiddenRomanicCharacter = this.HiddenRomanicNumbers.find(rn =>
+                        rn.Text.charCodeAt(0) === character.charCodeAt(0));
+                    var numericValue = hiddenRomanicCharacter?.Value;
+                    if (numericValue !== undefined) {
+                        result += numericValue;
+                        wordLine += ", " + this.FormatExplantionForHiddenRomanicCharacters(hiddenRomanicCharacter?.Explanation);
+                    }
+                }
+            });
+            wordLine = wordLine.replace(word + " => [, ", word + " => [ ");
+            wordLine += " ]";
+            step.Items.push(new SolutionItem(this.stepIndex, result, wordLine));
+            this.stepIndex++;
+        });
+
+        solution.Steps.push(step);
         return solution;
     }
 
@@ -142,42 +167,73 @@ export class CallGameService {
     }
 
     private InitiateRomanicNumbers() {
-        this.RomanicNumbers.push(new RomanicNumber(1, "I", 1, "I -> 1"));
-        this.RomanicNumbers.push(new RomanicNumber(2, "V", 5, "V -> 5"));
-        this.RomanicNumbers.push(new RomanicNumber(3, "X", 10, "X -> 10"));
-        this.RomanicNumbers.push(new RomanicNumber(4, "L", 50, "L -> 50"));
-        this.RomanicNumbers.push(new RomanicNumber(5, "C", 100, "C -> 100"));
-        this.RomanicNumbers.push(new RomanicNumber(6, "D", 500, "D -> 500"));
-        this.RomanicNumbers.push(new RomanicNumber(7, "M", 1000, "M -> 1000"));
+        this.RomanicNumbers.push(new RomanicNumber(1, "I", 1, "-I -> 1"));
+        this.RomanicNumbers.push(new RomanicNumber(2, "V", 5, "-V -> 5"));
+        this.RomanicNumbers.push(new RomanicNumber(3, "X", 10, "-X -> 10"));
+        this.RomanicNumbers.push(new RomanicNumber(4, "L", 50, "-L -> 50"));
+        this.RomanicNumbers.push(new RomanicNumber(5, "C", 100, "-C -> 100"));
+        this.RomanicNumbers.push(new RomanicNumber(6, "D", 500, "-D -> 500"));
+        this.RomanicNumbers.push(new RomanicNumber(7, "M", 1000, "-M -> 1000"));
     }
 
     private InitiateHiddenRomanicNumber() {
-        this.HiddenRomanicNumbers.push(new RomanicNumber(1, "B", 1, "B -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(2, "D", 1, "D -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(3, "E", 51, "E -> 1 x I -> 1 en 1 x L -> 50 => 51"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(4, "F", 1, "F -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(5, "G", 100, "G -> 1 x C => 100"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(6, "H", 2, "H -> 2 x I -> 1 => 2"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(7, "K", 1, "K -> I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(8, "L", 1, "L -> I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(9, "M", 7, "M -> 2 x I -> 2 en V -> 5 => 7"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(10, "N", 2, "N -> 2 x I -> 1 => 2"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(11, "O", 100, "O -> 1 x C => 100"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(12, "P", 1, "P -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(13, "Q", 100, "Q -> 1 x C => 100"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(14, "R", 1, "R -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(15, "T", 1, "T -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(16, "W", 10, "W -> 2 x V => 10"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(1, "B", 1, "- B -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(2, "D", 1, "- D -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(3, "E", 51, "- E -> 1 x I -> 1 en 1 x L -> 50 => 51"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(4, "F", 1, "- F -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(5, "G", 100, "- G -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(6, "H", 2, "- H -> 2 x I -> 1 => 2"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(7, "K", 1, "- K -> I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(8, "L", 1, "- L -> I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(9, "M", 7, "- M -> 2 x I -> 2 en V -> 5 => 7"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(10, "N", 2, "- N -> 2 x I -> 1 => 2"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(11, "O", 100, "- O -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(12, "P", 1, "- P -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(13, "Q", 100, "- Q -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(14, "R", 1, "- R -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(15, "T", 1, "- T -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(16, "W", 10, "- W -> 2 x V => 10"));
 
-        this.HiddenRomanicNumbers.push(new RomanicNumber(17, "b", 1, "b -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(18, "d", 1, "d -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(19, "h", 1, "h -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(20, "k", 1, "k -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(21, "l", 1, "l -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(22, "p", 1, "p -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(23, "q", 1, "q -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(17, "b", 1, "- b -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(18, "d", 1, "- d -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(19, "h", 1, "- h -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(20, "k", 1, "- k -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(21, "l", 1, "- l -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(22, "p", 1, "- p -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(23, "q", 1, "- q -> 1 x I => 1"));
 
-        this.HiddenRomanicNumbers.push(new RomanicNumber(24, "0", 1, "0 -> 1 x I => 1"));
-        this.HiddenRomanicNumbers.push(new RomanicNumber(25, "1", 1, "1-> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(24, "0", 1, "- 0 -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(25, "1", 1, "- 1 -> 1 x I => 1"));
+    }
+
+    private FormatExplantionForRomanicCharacters(fullExplanation: string | undefined): string {
+        if (fullExplanation != undefined) {
+            return fullExplanation?.replace("-", "Het teken ").replace("->", "heeft als waarde");
+        }
+        return "";
+    }
+
+    private FormatExplantionForHiddenRomanicCharacters(fullExplanation: string | undefined): string {
+        console.log(fullExplanation);
+        var formattedExplanation = "";
+        if (fullExplanation != undefined) {
+
+
+
+
+
+            var sign = fullExplanation.split(" -> ")[0].replace("- ", "");
+            console.log("sign: " + sign); // klopt
+            var explanationAndResult = fullExplanation.split(" -> ")[1];
+            console.log("explanationAndResult: " + explanationAndResult);
+            var explanation = explanationAndResult.split(" => ")[0];
+            var result = explanationAndResult.split(" => ")[1];
+            console.log("result: " + result);
+            var resultText = "Het symbool " + sign + " bevat " + explanation + " en geeft als resultaat " + result;
+            console.log(resultText);
+            return resultText;
+        }
+
+        return formattedExplanation;
     }
 }
