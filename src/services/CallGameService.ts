@@ -77,19 +77,16 @@ export class CallGameService {
         console.clear();
         console.log(assignment);
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
-
         var words = assignment.split(" ");
-        var romanicNumbers = new Array<RomanicNumber>();
-
         var wordLine = "";
         words.forEach(word => {
             var result = 0;
             wordLine = word + " => ["
-            word.toUpperCase().split("").forEach(character => {
+            word.split("").forEach(character => {
                 var romanicCharacters = this.RomanicNumbers.map(rn => rn.Text);
                 if (romanicCharacters.indexOf(character) !== -1) {
-                    // TODO: vergelijken adhv ascii waarde.
-                    var numericValue = this.RomanicNumbers.find(rn => rn.Text.charCodeAt() === character. charCodeAt())?.Value;
+                    var numericValue = this.RomanicNumbers.find(rn => 
+                        rn.Text.charCodeAt(0) === character.charCodeAt(0))?.Value;
                     if (numericValue !== undefined) {
                         result += numericValue;
                         wordLine += ", " + character + " => " + numericValue;
@@ -101,8 +98,6 @@ export class CallGameService {
             step.Items.push(new SolutionItem(this.stepIndex, result, wordLine));
             this.stepIndex++;
         });
-
-
 
         solution.Steps.push(step);
         return solution;
