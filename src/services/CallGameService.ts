@@ -8,8 +8,10 @@ import { RomanicNumber } from "../model/RomanicNumber";
 @Injectable()
 export class CallGameService {
     private stepIndex: number = 1;
+    
     private WrittenNumbers: Array<WrittenNumber> = new Array<WrittenNumber>();
     private RomanicNumbers: Array<RomanicNumber> = new Array<RomanicNumber>();
+    private HiddenRomanicNumbers: Array<RomanicNumber> = new Array<RomanicNumber>();
 
     constructor() {
         this.InitiateWrittenNumbers();
@@ -24,6 +26,8 @@ export class CallGameService {
         solution = this.solveWrittenNumbers(assignment, solution);
         solution = this.solveNumericNumbers(assignment, solution);
         solution = this.solveRomanicNumbers(assignment, solution);
+        solution = this.SolveHiddenRomanicNumbers(assignment, solution);
+
         return solution;
     }
 
@@ -103,6 +107,11 @@ export class CallGameService {
         return solution;
     }
 
+    private SolveHiddenRomanicNumbers(assignment: string, solution: Solution): Solution {
+        
+        return solution;
+    }
+
     private InitiateWrittenNumbers() {
         this.WrittenNumbers.push(new WrittenNumber("nul", 0, "nul -> 0"));
         this.WrittenNumbers.push(new WrittenNumber("een", 1, "een -> 1"));
@@ -133,16 +142,42 @@ export class CallGameService {
     }
 
     private InitiateRomanicNumbers() {
-        this.RomanicNumbers.push(new RomanicNumber("I", 1, "I -> 1", 1));
-        this.RomanicNumbers.push(new RomanicNumber("V", 5, "V -> 5", 2));
-        this.RomanicNumbers.push(new RomanicNumber("X", 10, "X -> 10", 3));
-        this.RomanicNumbers.push(new RomanicNumber("L", 50, "L -> 50", 4));
-        this.RomanicNumbers.push(new RomanicNumber("C", 100, "C -> 100", 5));
-        this.RomanicNumbers.push(new RomanicNumber("D", 500, "D -> 500", 6));
-        this.RomanicNumbers.push(new RomanicNumber("M", 1000, "M -> 1000", 7));
+        this.RomanicNumbers.push(new RomanicNumber(1, "I", 1, "I -> 1"));
+        this.RomanicNumbers.push(new RomanicNumber(2, "V", 5, "V -> 5"));
+        this.RomanicNumbers.push(new RomanicNumber(3, "X", 10, "X -> 10"));
+        this.RomanicNumbers.push(new RomanicNumber(4, "L", 50, "L -> 50"));
+        this.RomanicNumbers.push(new RomanicNumber(5, "C", 100, "C -> 100"));
+        this.RomanicNumbers.push(new RomanicNumber(6, "D", 500, "D -> 500"));
+        this.RomanicNumbers.push(new RomanicNumber(7, "M", 1000, "M -> 1000"));
     }
 
     private InitiateHiddenRomanicNumber() {
+        this.HiddenRomanicNumbers.push(new RomanicNumber(1, "B", 1, "B -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(2, "D", 1, "D -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(3, "E", 51, "E -> 1 x I -> 1 en 1 x L -> 50 => 51"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(4, "F", 1, "F -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(5, "G", 100, "G -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(6, "H", 2, "H -> 2 x I -> 1 => 2"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(7, "K", 1, "K -> I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(8, "L", 1, "L -> I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(9, "M", 7, "M -> 2 x I -> 2 en V -> 5 => 7"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(10, "N", 2, "N -> 2 x I -> 1 => 2"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(11, "O", 100, "O -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(12, "P", 1, "P -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(13, "Q", 100, "Q -> 1 x C => 100"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(14, "R", 1, "R -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(15, "T", 1, "T -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(16, "W", 10, "W -> 2 x V => 10"));
 
+        this.HiddenRomanicNumbers.push(new RomanicNumber(17, "b", 1, "b -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(18, "d", 1, "d -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(19, "h", 1, "h -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(20, "k", 1, "k -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(21, "l", 1, "l -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(22, "p", 1, "p -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(23, "q", 1, "q -> 1 x I => 1"));
+
+        this.HiddenRomanicNumbers.push(new RomanicNumber(24, "0", 1, "0 -> 1 x I => 1"));
+        this.HiddenRomanicNumbers.push(new RomanicNumber(25, "1", 1, "1-> 1 x I => 1"));
     }
 }
