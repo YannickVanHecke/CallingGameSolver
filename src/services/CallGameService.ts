@@ -4,6 +4,7 @@ import { Solution } from "../model/Solution";
 import { SolutionItem } from "../model/SolutionItem";
 import { Step } from "../model/Step";
 import { RomanicNumber } from "../model/RomanicNumber";
+import { Explanation } from "../model/Explanation";
 
 @Injectable()
 export class CallGameService {
@@ -47,7 +48,7 @@ export class CallGameService {
 
         this.WrittenNumbers.forEach(wn => {
             if (assignmentWithoutSpacing.indexOf(wn.Text) !== -1) {
-                stepWrittenNumbers.Items.push(new SolutionItem(this.stepIndex, wn.Value, wn.Explanation));
+                stepWrittenNumbers.Items.push(new SolutionItem(this.stepIndex, wn.Value, new Explanation()));
                 this.stepIndex++;
             }
         });
@@ -67,7 +68,9 @@ export class CallGameService {
         words.forEach(word => {
             if (parseInt(word)) {
                 var number = parseInt(word);
-                step.Items.push(new SolutionItem(this.stepIndex, number, word + " -> " + number));
+                var explanation = new Explanation();
+                explanation.Lines.push(word + " -> " + number);
+                step.Items.push(new SolutionItem(this.stepIndex, number, explanation));
                 this.stepIndex++;
             }
         });
@@ -81,10 +84,11 @@ export class CallGameService {
         console.clear();
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
         var words = assignment.split(" ");
-        var wordLine = "";
+        
         words.forEach(word => {
             var result = 0;
-            wordLine = word + " => ["
+            var wordLine = "Het woord " + word + " bevat ";
+            var explanation = new Explanation();
             word.split("").forEach(character => {
                 var romanicCharacters = this.RomanicNumbers.map(rn => rn.Text);
                 if (romanicCharacters.indexOf(character) !== -1) {
@@ -93,13 +97,17 @@ export class CallGameService {
                     var numericValue = romanicCharacter?.Value;
                     if (numericValue !== undefined) {
                         result += numericValue;
-                        wordLine += ", " + this.FormatExplantionForRomanicCharacters(romanicCharacter?.Explanation);
+                        explanation.Lines.push(this.FormatExplantionForRomanicCharacters(romanicCharacter?.Explanation));
                     }
                 }
             });
-            wordLine = wordLine.replace(word + " => [, ", word + " => [ ");
-            wordLine += " ]";
-            step.Items.push(new SolutionItem(this.stepIndex, result, wordLine));
+            wordLine += ".";
+            if (wordLine === word + "bevat.") {
+                wordLine == "";
+            }
+            console.log(wordLine === "");
+            
+            step.Items.push(new SolutionItem(this.stepIndex, result, explanation));
             this.stepIndex++;
         });
 
@@ -129,7 +137,7 @@ export class CallGameService {
             });
             wordLine = wordLine.replace(word + " => [, ", word + " => [ ");
             wordLine += " ]";
-            step.Items.push(new SolutionItem(this.stepIndex, result, wordLine));
+            step.Items.push(new SolutionItem(this.stepIndex, result, new Explanation()));
             this.stepIndex++;
         });
 
@@ -208,29 +216,19 @@ export class CallGameService {
 
     private FormatExplantionForRomanicCharacters(fullExplanation: string | undefined): string {
         if (fullExplanation != undefined) {
-            return fullExplanation?.replace("-", "Het teken ").replace("->", "heeft als waarde");
+            return fullExplanation?.replace("-", "het teken ").replace("->", "heeft als waarde");
         }
         return "";
     }
 
     private FormatExplantionForHiddenRomanicCharacters(fullExplanation: string | undefined): string {
-        console.log(fullExplanation);
         var formattedExplanation = "";
         if (fullExplanation != undefined) {
-
-
-
-
-
             var sign = fullExplanation.split(" -> ")[0].replace("- ", "");
-            console.log("sign: " + sign); // klopt
             var explanationAndResult = fullExplanation.split(" -> ")[1];
-            console.log("explanationAndResult: " + explanationAndResult);
             var explanation = explanationAndResult.split(" => ")[0];
             var result = explanationAndResult.split(" => ")[1];
-            console.log("result: " + result);
             var resultText = "Het symbool " + sign + " bevat " + explanation + " en geeft als resultaat " + result;
-            console.log(resultText);
             return resultText;
         }
 

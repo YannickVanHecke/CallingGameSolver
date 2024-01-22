@@ -196,9 +196,11 @@
           <th>Uitleg</th>
         </tr>
         <tr *ngFor="let row of step.Items">
-          <td>{{row.Order}}</td>
-          <td>{{row.Solution}}</td>
-          <td>{{row.Explanation}}</td>
+          <td [attr.rowspan]="row.Explanation.Lines.length">{{row.Order}}</td>
+          <td *ngFor="let explanationLine of row.Explanation.Lines">
+              {{explanationLine}}
+          </td>
+          <td [attr.rowspan]="row.Explanation.Lines.length">{{row.Solution}}</td>
         </tr>
         <tr>
           <td>Totaal</td>
