@@ -187,8 +187,19 @@
   </div>
   <div *ngIf="solution.Steps.length > 0" class="solutionItemBlock">
     <div *ngFor="let step of solution.Steps">
-      {{step.Name}}
-      <br/>
+      <h2>{{step.Name}}</h2>
+      <br />
+      <h3>Opgave</h3>
+      <span>{{Assignment}}</span>
+      
+      <div *ngFor="let row of step.Items">
+        Stap: {{row.Order}}
+        Oplossing: {{row.Solution}}
+        Uitleg: 
+          <span *ngFor="let line of row.Explanation.Lines">
+            Lijn: {{line}}&#010;
+          </span>
+      </div>
       <table>
         <tr>
           <th>Stap</th>
@@ -196,11 +207,11 @@
           <th>Uitleg</th>
         </tr>
         <tr *ngFor="let row of step.Items">
-          <td [attr.rowspan]="row.Explanation.Lines.length">{{row.Order}}</td>
-          <td *ngFor="let explanationLine of row.Explanation.Lines">
-              {{explanationLine}}
+          <td>{{row.Order}}</td>
+          <td>{{row.Solution}}</td>
+          <td *ngFor="let line of row.Explanation.Lines">
+            <span>Lijn: {{line}}&#010;</span>
           </td>
-          <td [attr.rowspan]="row.Explanation.Lines.length">{{row.Solution}}</td>
         </tr>
         <tr>
           <td>Totaal</td>
@@ -208,7 +219,7 @@
           <td></td>
         </tr>
       </table>
-      <br/>
+      <br />
     </div>
   </div>
 </main>
