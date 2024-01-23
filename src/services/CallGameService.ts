@@ -25,34 +25,34 @@ export class CallGameService {
         var solution = new Solution();
 
         solution = this.solveWrittenNumbers(assignment, solution);
-        solution = this.solveNumericNumbers(assignment, solution);
-        solution = this.solveRomanicNumbers(assignment, solution);
-        solution = this.SolveHiddenRomanicNumbers(assignment, solution);
+        // solution = this.solveNumericNumbers(assignment, solution);
+        // solution = this.solveRomanicNumbers(assignment, solution);
+        // solution = this.SolveHiddenRomanicNumbers(assignment, solution);
 
         return solution;
     }
 
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
-        var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking, zowel geschreven als in cijfers");
+        var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking in volgorde van voorkomen, zowel geschreven als in cijfers");
         console.log(stepWrittenNumbers.Name);
 
-        const assignmentWithoutSpacing = assignment.toLowerCase()
-            .replaceAll(" ", "")
-            .replaceAll("ë", "e");
-        const assigmentWithoutSpacingLength = assignmentWithoutSpacing.length;
 
         var sortedWrittenNumbersByTextLength = this.WrittenNumbers.sort((a, b) => b.Text.length - a.Text.length);
         var lengthLongestWrittenNumber = sortedWrittenNumbersByTextLength[0].Length;
 
         console.log(sortedWrittenNumbersByTextLength);
         console.log(lengthLongestWrittenNumber);
-        for (var wordIndex = 0; wordIndex <= lengthLongestWrittenNumber; wordIndex++) {
-            var word = sortedWrittenNumbersByTextLength[wordIndex];
-            for (var assignmentIndex = 0; assignmentIndex <= assignment.length - word.Length; assignmentIndex++) {
-                
-            }
-        }
-
+        
+        var solutionItemIndex = 0;
+        // tekst overlopen en kijken of er een, twee, drie, uit written
+        this.WrittenNumbers.forEach(wn => {
+            var indexes = this.SearchIndexesOfWordInAssigment(assignment, wn.Text);
+            indexes.forEach(index => {
+                stepWrittenNumbers.Items.push(new SolutionItem(index, wn.Value, new Explanation(wn.Text + " => " + wn.Value)));
+            });
+        });
+        console.log(stepWrittenNumbers);
+        
 
 
 
@@ -232,5 +232,17 @@ export class CallGameService {
         }
 
         return formattedExplanation;
+    }
+
+    private SearchIndexesOfWordInAssigment(assignment: string, word: string): Array<number> {
+        var result = new Array<number>();
+
+        for (var startIndex = 0; startIndex <= assignment.length - word.length; startIndex++) {
+            if (assignment.substring(startIndex, word.length) == word) {
+                result.push(startIndex);
+            }
+        }
+
+        return result;
     }
 }
