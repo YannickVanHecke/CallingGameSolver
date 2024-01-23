@@ -34,8 +34,8 @@ export class CallGameService {
 
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
         var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking, zowel geschreven als in cijfers");
-
-        console.clear();
+        console.log(stepWrittenNumbers.Name);
+        
         const assignmentWithoutSpacing = assignment.toLowerCase()
             .replaceAll(" ", "")
             .replaceAll("ë", "e");
@@ -52,6 +52,10 @@ export class CallGameService {
                 this.stepIndex++;
             }
         });
+
+
+
+
         solution.Steps.push(stepWrittenNumbers);
 
 
@@ -62,7 +66,6 @@ export class CallGameService {
 
     private solveNumericNumbers(assignment: string, solution: Solution): Solution {
         var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel in cijfers als in tekst");
-
         var words = assignment.split(" ");
 
         words.forEach(word => {
@@ -81,10 +84,8 @@ export class CallGameService {
     }
 
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
-        console.clear();
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
         var words = assignment.split(" ");
-        
         words.forEach(word => {
             var result = 0;
             var wordLine = "Het woord " + word + " bevat ";
@@ -105,8 +106,6 @@ export class CallGameService {
             if (wordLine === word + "bevat.") {
                 wordLine == "";
             }
-            console.log(wordLine === "");
-            
             step.Items.push(new SolutionItem(this.stepIndex, result, explanation));
             this.stepIndex++;
         });
@@ -116,7 +115,6 @@ export class CallGameService {
     }
 
     private SolveHiddenRomanicNumbers(assignment: string, solution: Solution): Solution {
-        console.clear();
         var step = new Step("Tel alle romeinse cijfers op die verborgen zitten in cijfers en letters");
         var words = assignment.split(" ");
         var wordLine = "";
