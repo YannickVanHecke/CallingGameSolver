@@ -35,23 +35,24 @@ export class CallGameService {
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
         var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking, zowel geschreven als in cijfers");
         console.log(stepWrittenNumbers.Name);
-        
+
         const assignmentWithoutSpacing = assignment.toLowerCase()
             .replaceAll(" ", "")
             .replaceAll("ë", "e");
         const assigmentWithoutSpacingLength = assignmentWithoutSpacing.length;
-        var sortedWrittenNumbersByTextLength = this.WrittenNumbers.sort((a, b) => b.Length - a.Length);
-        console.log(sortedWrittenNumbersByTextLength);
-        var maxLengthWrittenNumbers = this.WrittenNumbers.sort((a, b) => a.Length - b.Length)[0];
-        console.log("maxLengthWrittenNumbers: " + maxLengthWrittenNumbers);
-        console.log("assignmentWithoutSpacing: " + assignmentWithoutSpacing);
 
-        this.WrittenNumbers.forEach(wn => {
-            if (assignmentWithoutSpacing.indexOf(wn.Text) !== -1) {
-                stepWrittenNumbers.Items.push(new SolutionItem(this.stepIndex, wn.Value, new Explanation()));
-                this.stepIndex++;
+        var sortedWrittenNumbersByTextLength = this.WrittenNumbers.sort((a, b) => b.Text.length - a.Text.length);
+        var lengthLongestWrittenNumber = sortedWrittenNumbersByTextLength[0].Length;
+
+        console.log(sortedWrittenNumbersByTextLength);
+        console.log(lengthLongestWrittenNumber);
+        for (var wordIndex = 0; wordIndex <= lengthLongestWrittenNumber; wordIndex++) {
+            var word = sortedWrittenNumbersByTextLength[wordIndex];
+            for (var assignmentIndex = 0; assignmentIndex <= assignment.length - word.Length; assignmentIndex++) {
+                
             }
-        });
+        }
+
 
 
 
