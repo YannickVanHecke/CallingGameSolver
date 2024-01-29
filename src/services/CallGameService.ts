@@ -5,6 +5,8 @@ import { SolutionItem } from "../model/SolutionItem";
 import { Step } from "../model/Step";
 import { RomanicNumber } from "../model/RomanicNumber";
 import { Explanation } from "../model/Explanation";
+import { FoundWrittenNumber } from "../model/FoundWrittenNumber";
+import { NumberType } from "../model/NumberType";
 
 @Injectable()
 export class CallGameService {
@@ -33,33 +35,35 @@ export class CallGameService {
     }
 
     private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
+        console.clear();
         var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking in volgorde van voorkomen, zowel geschreven als in cijfers");
         console.log(stepWrittenNumbers.Name);
 
 
-        var sortedWrittenNumbersByTextLength = this.WrittenNumbers.sort((a, b) => b.Text.length - a.Text.length);
-        var lengthLongestWrittenNumber = sortedWrittenNumbersByTextLength[0].Length;
+        var sortedWrittenNumbersByValue = this.WrittenNumbers.sort((a, b) => a.Value - b.Value);
+        var lengthLongestWrittenNumber = sortedWrittenNumbersByValue[0].Text.length;
 
-        console.log(sortedWrittenNumbersByTextLength);
+        console.log(sortedWrittenNumbersByValue);
         console.log(lengthLongestWrittenNumber);
-        
-        var solutionItemIndex = 0;
+
         // tekst overlopen en kijken of er een, twee, drie, uit written
-        this.WrittenNumbers.forEach(wn => {
-            var indexes = this.SearchIndexesOfWordInAssigment(assignment, wn.Text);
-            indexes.forEach(index => {
-                stepWrittenNumbers.Items.push(new SolutionItem(index, wn.Value, new Explanation(wn.Text + " => " + wn.Value)));
-            });
-        });
+        console.log(this.WrittenNumbers);
+
+        var writtenNumbers = this.SearchIndexesOfWordInLowerCaseInAssigment(
+            assignment, sortedWrittenNumbersByValue, false);
+
+
+        /*stepWrittenNumbers.Items = stepWrittenNumbers.Items.sort(wn => wn.Order);
+
         console.log(stepWrittenNumbers);
-        
+
 
 
 
 
         solution.Steps.push(stepWrittenNumbers);
 
-
+*/
 
         return solution;
 
@@ -234,15 +238,33 @@ export class CallGameService {
         return formattedExplanation;
     }
 
-    private SearchIndexesOfWordInAssigment(assignment: string, word: string): Array<number> {
-        var result = new Array<number>();
+    private SearchIndexesOfWordInLowerCaseInAssigment(
+        assignment: string,
+        numberToSearch: Array<WrittenNumber>,
+        multiWordSearch: Boolean): Array<FoundWrittenNumber> {
 
-        for (var startIndex = 0; startIndex <= assignment.length - word.length; startIndex++) {
-            if (assignment.substring(startIndex, word.length) == word) {
-                result.push(startIndex);
+
+        var foundWrittenNumbers = new Array<FoundWrittenNumber>();
+        console.log(numberToSearch);
+        console.table(numberToSearch);
+        numberToSearch.forEach(number => {
+            var assignmentUsingToSearch = assignment.toLowerCase();
+            if (multiWordSearch)
+                assignmentUsingToSearch = assignmentUsingToSearch.toLowerCase().replaceAll(" ", "");
+            console.log(assignmentUsingToSearch);
+            do {
+                var previousIndexOfWord = assignmentUsingToSearch.indexOf(number.Text.toLowerCase());
+                console.log(number.Text + " -> " + previousIndexOfWord);
+                foundWrittenNumbers.push(new FoundWrittenNumber(previousIndexOfWord, number));
+                assignmentUsingToSearch = assignmentUsingToSearch.substring(previousIndexOfWord + number.Text.length);
+                console.log(assignmentUsingToSearch);
             }
-        }
+            while (previousIndexOfWord !== -1)
+        });
 
-        return result;
+        foundWrittenNumbers = foundWrittenNumbers.filter(fwn => fwn.Index !== -1).sort((a, b) => a.Index - b.Index);
+        console.log(foundWrittenNumbers);
+        
+        return foundWrittenNumbers;
     }
 }
