@@ -42,17 +42,14 @@ export class CallGameService {
 
         var sortedWrittenNumbersByValue = this.WrittenNumbers.sort((a, b) => a.Value - b.Value);
         var lengthLongestWrittenNumber = sortedWrittenNumbersByValue[0].Text.length;
+        
+        var writtenNumbers = 
+            this.SearchIndexesOfWordInLowerCaseInAssigment(assignment, sortedWrittenNumbersByValue, false);
+        var writtenAndHiddenNumbers = 
+            this.SearchIndexesOfWordInLowerCaseInAssigment(assignment, sortedWrittenNumbersByValue, true);
+        console.log(writtenNumbers);
+        console.log(writtenAndHiddenNumbers);
 
-        console.log(sortedWrittenNumbersByValue);
-        console.log(lengthLongestWrittenNumber);
-
-        // tekst overlopen en kijken of er een, twee, drie, uit written
-        console.log(this.WrittenNumbers);
-
-        var writtenNumbers = this.SearchIndexesOfWordInLowerCaseInAssigment(
-            assignment, sortedWrittenNumbersByValue, false);
-        var writtenAndHiddenNumbers = this.SearchIndexesOfWordInLowerCaseInAssigment(
-            assignment, sortedWrittenNumbersByValue, true);
 
         /*stepWrittenNumbers.Items = stepWrittenNumbers.Items.sort(wn => wn.Order);
 
