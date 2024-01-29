@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { CallGameService } from '../services/CallGameService';
 import { Solution } from '../model/Solution';
 
@@ -22,7 +21,7 @@ export class AppComponent {
    *
    */
   constructor(private callGameService: CallGameService) {
-
+    
     this.Assignment = "VANNACHT WEER EEN WINNAAR! DRIEëndertig gedeeld door 3 + 199 - 9 + TIEN. De 1ste VIERT";
     
   }
