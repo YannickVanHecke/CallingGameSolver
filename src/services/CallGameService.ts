@@ -51,7 +51,8 @@ export class CallGameService {
 
         var writtenNumbers = this.SearchIndexesOfWordInLowerCaseInAssigment(
             assignment, sortedWrittenNumbersByValue, false);
-
+        var writtenAndHiddenNumbers = this.SearchIndexesOfWordInLowerCaseInAssigment(
+            assignment, sortedWrittenNumbersByValue, true);
 
         /*stepWrittenNumbers.Items = stepWrittenNumbers.Items.sort(wn => wn.Order);
 
