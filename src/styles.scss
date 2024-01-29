@@ -14,6 +14,11 @@
       background-color: black;
       color: white;  
     }
+
+    button {
+        background-color: black;
+        color: white;
+    }
 }
 
 @media (prefers-color-schema: light) {
@@ -31,6 +36,11 @@
       border-color: black;
       background-color: white;
       color: black;  
+    }
+
+    button {
+        background-color: white;
+        color: black
     }
 }
 
