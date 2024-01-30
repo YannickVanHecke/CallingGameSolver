@@ -21,10 +21,11 @@ export class CallGameService {
     }
 
     public solve(assignment: string): Solution {
+        console.clear();
         this.stepIndex = 1;
         var solution = new Solution();
 
-        solution = this.solveWrittenNumbers(assignment, solution);
+        solution = this.solveNumbersWhichAppearInWithinWords(assignment, solution);
         // solution = this.solveNumericNumbers(assignment, solution);
         // solution = this.solveRomanicNumbers(assignment, solution);
         // solution = this.SolveHiddenRomanicNumbers(assignment, solution);
@@ -32,39 +33,49 @@ export class CallGameService {
         return solution;
     }
 
-    private solveWrittenNumbers(assignment: string, solution: Solution): Solution {
-        console.clear();
-        var stepWrittenNumbers = new Step("Tel alle getallen op die je ziet staan in de bewerking in volgorde van voorkomen, zowel geschreven als in cijfers");
-        console.log(stepWrittenNumbers.Name);
+    private solveNumbersWhichAppearInWithinWords(assignment: string, solution: Solution): Solution {
+        var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel geschreven als in cijfers.");
+        assignment = assignment.replace("ë", "e").toLowerCase();
 
-
-        var sortedWrittenNumbersByValue = this.WrittenNumbers.sort((a, b) => a.Value - b.Value);
-        var lengthLongestWrittenNumber = sortedWrittenNumbersByValue[0].Text.length;
-        
-        var writtenNumbers = 
-            this.SearchIndexesOfWordInLowerCaseInAssigment(assignment, sortedWrittenNumbersByValue, false);
-        var writtenAndHiddenNumbers = 
-            this.SearchIndexesOfWordInLowerCaseInAssigment(assignment, sortedWrittenNumbersByValue, true);
-        console.log(writtenNumbers);
-        console.log(writtenAndHiddenNumbers);
-
-
-        return solution;
-
-    }
-
-    private solveNumericNumbers(assignment: string, solution: Solution): Solution {
-        var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel in cijfers als in tekst");
         var words = assignment.split(" ");
+        
+        words.forEach(word => {
+            word = "drie miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd vijfentwintig";
+            var miljards = word.split("miljard")[0].trim();
+            // -> honderdtallen, tientallen en eenheden uithalen
+            var miljoenen = word.split("miljard")[1].split("miljoen")[0].trim();
+            // -> honderdtallen, tientallen en eenheden uithalen
+            var duizendtallen = word.split("miljard")[1].split("miljoen")[1].split("duizend")[0].trim();
+            // -> honderdtallen, tientallen en eenheden uithalen
+            console.clear();
+            console.log(word);
+            console.log("miljarden: " + miljards);
+            console.log("miljoenen: " + miljoenen);
+            console.log("duizenden: " + duizendtallen);
+        });
+
 
 
         solution.Steps.push(step);
+        return solution;
+    }
+
+    private solveNumbersWhichAppearOverDifferentWords(assignment: string, solution: Solution): Solution {
+
 
         return solution;
     }
 
+
+
+
+
+
+
+
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
+        console.log(step.Name);
         var words = assignment.split(" ");
         words.forEach(word => {
             var result = 0;
@@ -120,6 +131,54 @@ export class CallGameService {
 
         solution.Steps.push(step);
         return solution;
+    }
+
+    private SearchIndexesOfWordInLowerCaseInAssigment(
+        assignment: string,
+        numberToSearch: Array<WrittenNumber>,
+        crossWordSearch: Boolean): Array<FoundWrittenNumber> {
+            assignment = assignment.toLowerCase();
+        var result = new Array<FoundWrittenNumber>();
+        numberToSearch.forEach(nts => {
+            if (crossWordSearch) {
+                var numberCombinations = this.CreateWordCombinations(nts);
+                numberCombinations.forEach((key, value) => {
+                    var indexOfKeyInAssignment = assignment.indexOf(value.toString());
+                    if (indexOfKeyInAssignment !== -1) {
+                        assignment = assignment.replaceAll(value, "<b>" + value + "</b>");
+                        var writtenNumber = this.WrittenNumbers.filter(wn => wn.Text == nts.Text)[0];
+                        result.push(new FoundWrittenNumber(indexOfKeyInAssignment, writtenNumber, assignment));
+                    }
+                });
+            }
+            else {
+                var words = assignment.split(" ");
+                words.forEach(word => {
+                    numberToSearch.forEach(nts => {
+                        
+                    });
+                });
+            }
+        });
+        console.log(result);
+
+        return result.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
+    }
+
+    private CreateWordCombinations(numberToSearch: WrittenNumber): Map<string, number> {
+        var combinations = new Map<string, number>();
+        
+        combinations.set(numberToSearch.Text, numberToSearch.Value);
+
+        for (var indexOfSpacing = 1; indexOfSpacing <= numberToSearch.Text.length - 1; indexOfSpacing++) {
+            var key = 
+                numberToSearch.Text.substring(0, indexOfSpacing) + " " + 
+                numberToSearch.Text.substring(indexOfSpacing);
+            var value = numberToSearch.Value;
+            combinations.set(key, value);
+        }
+
+        return combinations;
     }
 
     private InitiateWrittenNumbers() {
@@ -210,53 +269,5 @@ export class CallGameService {
         }
 
         return formattedExplanation;
-    }
-
-    private SearchIndexesOfWordInLowerCaseInAssigment(
-        assignment: string,
-        numberToSearch: Array<WrittenNumber>,
-        crossWordSearch: Boolean): Array<FoundWrittenNumber> {
-            assignment = assignment.toLowerCase();
-        var result = new Array<FoundWrittenNumber>();
-        numberToSearch.forEach(nts => {
-            if (crossWordSearch) {
-                var numberCombinations = this.CreateWordCombinations(nts);
-                numberCombinations.forEach((key, value) => {
-                    var indexOfKeyInAssignment = assignment.indexOf(value.toString());
-                    if (indexOfKeyInAssignment !== -1) {
-                        assignment = assignment.replaceAll(value, "<b>" + value + "</b>");
-                        var writtenNumber = this.WrittenNumbers.filter(wn => wn.Text == nts.Text)[0];
-                        result.push(new FoundWrittenNumber(indexOfKeyInAssignment, writtenNumber, assignment));
-                    }
-                });
-            }
-            else {
-                var words = assignment.split(" ");
-                words.forEach(word => {
-                    numberToSearch.forEach(nts => {
-                        
-                    });
-                });
-            }
-        });
-        console.log(result);
-
-        return result.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
-    }
-
-    private CreateWordCombinations(numberToSearch: WrittenNumber): Map<string, number> {
-        var combinations = new Map<string, number>();
-        
-        combinations.set(numberToSearch.Text, numberToSearch.Value);
-
-        for (var indexOfSpacing = 1; indexOfSpacing <= numberToSearch.Text.length - 1; indexOfSpacing++) {
-            var key = 
-                numberToSearch.Text.substring(0, indexOfSpacing) + " " + 
-                numberToSearch.Text.substring(indexOfSpacing);
-            var value = numberToSearch.Value;
-            combinations.set(key, value);
-        }
-
-        return combinations;
     }
 }
