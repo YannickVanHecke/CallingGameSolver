@@ -1,12 +1,10 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { WrittenNumber } from "../model/WrittenNumber";
 import { Solution } from "../model/Solution";
-import { SolutionItem } from "../model/SolutionItem";
 import { Step } from "../model/Step";
 import { RomanicNumber } from "../model/RomanicNumber";
 import { Explanation } from "../model/Explanation";
 import { FoundWrittenNumber } from "../model/FoundWrittenNumber";
-import { NumberType } from "../model/NumberType";
 
 @Injectable()
 export class CallGameService {
@@ -51,18 +49,6 @@ export class CallGameService {
         console.log(writtenAndHiddenNumbers);
 
 
-        /*stepWrittenNumbers.Items = stepWrittenNumbers.Items.sort(wn => wn.Order);
-
-        console.log(stepWrittenNumbers);
-
-
-
-
-
-        solution.Steps.push(stepWrittenNumbers);
-
-*/
-
         return solution;
 
     }
@@ -71,15 +57,6 @@ export class CallGameService {
         var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel in cijfers als in tekst");
         var words = assignment.split(" ");
 
-        words.forEach(word => {
-            if (parseInt(word)) {
-                var number = parseInt(word);
-                var explanation = new Explanation();
-                explanation.Lines.push(word + " -> " + number);
-                step.Items.push(new SolutionItem(this.stepIndex, number, explanation));
-                this.stepIndex++;
-            }
-        });
 
         solution.Steps.push(step);
 
@@ -109,7 +86,7 @@ export class CallGameService {
             if (wordLine === word + "bevat.") {
                 wordLine == "";
             }
-            step.Items.push(new SolutionItem(this.stepIndex, result, explanation));
+            
             this.stepIndex++;
         });
 
@@ -138,7 +115,6 @@ export class CallGameService {
             });
             wordLine = wordLine.replace(word + " => [, ", word + " => [ ");
             wordLine += " ]";
-            step.Items.push(new SolutionItem(this.stepIndex, result, new Explanation()));
             this.stepIndex++;
         });
 
@@ -243,24 +219,25 @@ export class CallGameService {
 
 
         var foundWrittenNumbers = new Array<FoundWrittenNumber>();
-        console.log(numberToSearch);
-        console.table(numberToSearch);
+        var assignmentUsingToSearch = assignment.toLowerCase();
         numberToSearch.forEach(number => {
-            var assignmentUsingToSearch = assignment.toLowerCase();
             if (multiWordSearch)
                 assignmentUsingToSearch = assignmentUsingToSearch.toLowerCase().replaceAll(" ", "");
             console.log(assignmentUsingToSearch);
             do {
                 var previousIndexOfWord = assignmentUsingToSearch.indexOf(number.Text.toLowerCase());
-                console.log(number.Text + " -> " + previousIndexOfWord);
-                foundWrittenNumbers.push(new FoundWrittenNumber(previousIndexOfWord, number));
-                assignmentUsingToSearch = assignmentUsingToSearch.substring(previousIndexOfWord + number.Text.length);
-                console.log(assignmentUsingToSearch);
+                if (previousIndexOfWord !== -1) {
+                    console.log(number.Text + " -> " + previousIndexOfWord);
+                    foundWrittenNumbers.push(new FoundWrittenNumber(previousIndexOfWord, number));
+                    assignmentUsingToSearch = assignmentUsingToSearch.substring(previousIndexOfWord + number.Text.length);
+                    console.log(assignmentUsingToSearch);
+                }
+                
             }
             while (previousIndexOfWord !== -1)
         });
 
-        foundWrittenNumbers = foundWrittenNumbers.filter(fwn => fwn.Index !== -1).sort((a, b) => a.Index - b.Index);
+        foundWrittenNumbers = foundWrittenNumbers.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
         console.log(foundWrittenNumbers);
         
         return foundWrittenNumbers;

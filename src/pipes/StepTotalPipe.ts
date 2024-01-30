@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SolutionItem } from "../model/SolutionItem";
-import { Step } from '../model/Step';
+import { WrittenNumber } from '../model/WrittenNumber';
+
 @Pipe({name: 'StepTotalPipe'})
 export class StepTotalPipe implements PipeTransform {
-    transform(items: SolutionItem[]) {
+    transform(items: WrittenNumber[]) {
         console.log(items);
         var total = 0;
         items.forEach(item => {
-                total += item.Solution;
+                total += item.Value;
             });
 
         return total;

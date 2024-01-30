@@ -1,5 +1,4 @@
 export class WrittenNumber {
-    public startPosition!: number;
     public Text!: string;
     public Value!: number;
     public Explanation!: string;

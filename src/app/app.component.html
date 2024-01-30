@@ -190,27 +190,16 @@
       <br />
       <h3>Opgave</h3>
       <span>{{Assignment}}</span>
-      
-      <div *ngFor="let row of step.Items">
-        Stap: {{row.Order}}
-        Oplossing: {{row.Solution}}
-        Uitleg: 
-          <span *ngFor="let line of row.Explanation.Lines">
-            Lijn: {{line}}&#010;
-          </span>
-      </div>
       <table>
         <tr>
-          <th>Stap</th>
+          <th>Plaats van voorkomen</th>
           <th>Oplossing</th>
           <th>Uitleg</th>
         </tr>
         <tr *ngFor="let row of step.Items">
-          <td>{{row.Order}}</td>
-          <td>{{row.Solution}}</td>
-          <td *ngFor="let line of row.Explanation.Lines">
-            <span>Lijn: {{line}}&#010;</span>
-          </td>
+          <td>{{row.IndexOfOccurrence}}</td>
+          <td>{{row.Value}}</td>
+          <td>{{row.Explanation}}</td>
         </tr>
         <tr>
           <td>Totaal</td>
