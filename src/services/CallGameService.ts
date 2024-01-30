@@ -215,31 +215,48 @@ export class CallGameService {
     private SearchIndexesOfWordInLowerCaseInAssigment(
         assignment: string,
         numberToSearch: Array<WrittenNumber>,
-        multiWordSearch: Boolean): Array<FoundWrittenNumber> {
-
-
-        var foundWrittenNumbers = new Array<FoundWrittenNumber>();
-        var assignmentUsingToSearch = assignment.toLowerCase();
-        numberToSearch.forEach(number => {
-            if (multiWordSearch)
-                assignmentUsingToSearch = assignmentUsingToSearch.toLowerCase().replaceAll(" ", "");
-            console.log(assignmentUsingToSearch);
-            do {
-                var previousIndexOfWord = assignmentUsingToSearch.indexOf(number.Text.toLowerCase());
-                if (previousIndexOfWord !== -1) {
-                    console.log(number.Text + " -> " + previousIndexOfWord);
-                    foundWrittenNumbers.push(new FoundWrittenNumber(previousIndexOfWord, number));
-                    assignmentUsingToSearch = assignmentUsingToSearch.substring(previousIndexOfWord + number.Text.length);
-                    console.log(assignmentUsingToSearch);
-                }
-                
+        crossWordSearch: Boolean): Array<FoundWrittenNumber> {
+            assignment = assignment.toLowerCase();
+        var result = new Array<FoundWrittenNumber>();
+        numberToSearch.forEach(nts => {
+            if (crossWordSearch) {
+                var numberCombinations = this.CreateWordCombinations(nts);
+                numberCombinations.forEach((key, value) => {
+                    var indexOfKeyInAssignment = assignment.indexOf(value.toString());
+                    if (indexOfKeyInAssignment !== -1) {
+                        assignment = assignment.replaceAll(value, "<b>" + value + "</b>");
+                        var writtenNumber = this.WrittenNumbers.filter(wn => wn.Text == nts.Text)[0];
+                        result.push(new FoundWrittenNumber(indexOfKeyInAssignment, writtenNumber, assignment));
+                    }
+                });
             }
-            while (previousIndexOfWord !== -1)
+            else {
+                var words = assignment.split(" ");
+                words.forEach(word => {
+                    numberToSearch.forEach(nts => {
+                        
+                    });
+                });
+            }
         });
+        console.log(result);
 
-        foundWrittenNumbers = foundWrittenNumbers.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
-        console.log(foundWrittenNumbers);
+        return result.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
+    }
+
+    private CreateWordCombinations(numberToSearch: WrittenNumber): Map<string, number> {
+        var combinations = new Map<string, number>();
         
-        return foundWrittenNumbers;
+        combinations.set(numberToSearch.Text, numberToSearch.Value);
+
+        for (var indexOfSpacing = 1; indexOfSpacing <= numberToSearch.Text.length - 1; indexOfSpacing++) {
+            var key = 
+                numberToSearch.Text.substring(0, indexOfSpacing) + " " + 
+                numberToSearch.Text.substring(indexOfSpacing);
+            var value = numberToSearch.Value;
+            combinations.set(key, value);
+        }
+
+        return combinations;
     }
 }
