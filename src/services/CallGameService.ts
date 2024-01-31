@@ -40,18 +40,42 @@ export class CallGameService {
         var words = assignment.split(" ");
         
         words.forEach(word => {
-            word = "drie miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd vijfentwintig";
+            word = "drie miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd veertien";
             var miljards = word.split("miljard")[0].trim();
             // -> honderdtallen, tientallen en eenheden uithalen
             var miljoenen = word.split("miljard")[1].split("miljoen")[0].trim();
             // -> honderdtallen, tientallen en eenheden uithalen
             var duizendtallen = word.split("miljard")[1].split("miljoen")[1].split("duizend")[0].trim();
             // -> honderdtallen, tientallen en eenheden uithalen
+            var honderden = word.split("miljard")[1].split("miljoen")[1].split("duizend")[1].trim().split("honderd")[0];
+            var tientallenEnEenheden = word.split("miljard")[1].split("miljoen")[1].split("duizend")[1].trim().split("honderd")[1].trim();
+            var tientallen = "";
+            var eenheden = "";
+
             console.clear();
             console.log(word);
             console.log("miljarden: " + miljards);
             console.log("miljoenen: " + miljoenen);
             console.log("duizenden: " + duizendtallen);
+            console.log("honderden : " + honderden);
+            console.log("tientallenEnEenheden: " + tientallenEnEenheden);
+            this.WrittenNumbers.forEach(wn => {
+                console.log(
+                    wn.Text.toLowerCase() + ".indexOf(" + tientallenEnEenheden.toLocaleLowerCase() + ") -> " + 
+                    wn.Text.toLowerCase().indexOf(tientallenEnEenheden.toLowerCase()));
+            });
+            var number = this.WrittenNumbers.find(wn => wn.Text.toLowerCase().indexOf(tientallenEnEenheden.toLowerCase()) !== -1);
+            console.log(number);
+            if (number == undefined) {
+                tientallen = tientallenEnEenheden.split("en")[1];
+                eenheden = tientallenEnEenheden.split("en")[0];
+            } else {
+                console.log(number.Value.toString());
+                tientallen = number.Value.toString().substring(0,1);
+                eenheden = number.Value.toString().substring(1,2);
+            }
+            console.log("tientallen: " + tientallen);
+            console.log("eenheden: " + eenheden);
         });
 
 
