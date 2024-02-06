@@ -5,6 +5,7 @@ import { Step } from "../model/Step";
 import { RomanicNumber } from "../model/RomanicNumber";
 import { Explanation } from "../model/Explanation";
 import { FoundWrittenNumber } from "../model/FoundWrittenNumber";
+import { SplittedNumber } from "../model/SplittedNumber";
 
 @Injectable()
 export class CallGameService {
@@ -26,6 +27,7 @@ export class CallGameService {
         var solution = new Solution();
 
         solution = this.solveNumbersWhichAppearInWithinWords(assignment, solution);
+        
         // solution = this.solveNumericNumbers(assignment, solution);
         // solution = this.solveRomanicNumbers(assignment, solution);
         // solution = this.SolveHiddenRomanicNumbers(assignment, solution);
@@ -37,48 +39,9 @@ export class CallGameService {
         var step = new Step("Tel alle getallen die je ziet staan in de bewerking, zowel geschreven als in cijfers.");
         assignment = assignment.replace("ë", "e").toLowerCase();
 
-        var words = assignment.split(" ");
-        
-        words.forEach(word => {
-            word = "drie miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd veertien";
-            var miljards = word.split("miljard")[0].trim();
-            // -> honderdtallen, tientallen en eenheden uithalen
-            var miljoenen = word.split("miljard")[1].split("miljoen")[0].trim();
-            // -> honderdtallen, tientallen en eenheden uithalen
-            var duizendtallen = word.split("miljard")[1].split("miljoen")[1].split("duizend")[0].trim();
-            // -> honderdtallen, tientallen en eenheden uithalen
-            var honderden = word.split("miljard")[1].split("miljoen")[1].split("duizend")[1].trim().split("honderd")[0];
-            var tientallenEnEenheden = word.split("miljard")[1].split("miljoen")[1].split("duizend")[1].trim().split("honderd")[1].trim();
-            var tientallen = "";
-            var eenheden = "";
-
-            console.clear();
-            console.log(word);
-            console.log("miljarden: " + miljards);
-            console.log("miljoenen: " + miljoenen);
-            console.log("duizenden: " + duizendtallen);
-            console.log("honderden : " + honderden);
-            console.log("tientallenEnEenheden: " + tientallenEnEenheden);
-            this.WrittenNumbers.forEach(wn => {
-                console.log(
-                    wn.Text.toLowerCase() + ".indexOf(" + tientallenEnEenheden.toLocaleLowerCase() + ") -> " + 
-                    wn.Text.toLowerCase().indexOf(tientallenEnEenheden.toLowerCase()));
-            });
-            var number = this.WrittenNumbers.find(wn => wn.Text.toLowerCase().indexOf(tientallenEnEenheden.toLowerCase()) !== -1);
-            console.log(number);
-            if (number == undefined) {
-                tientallen = tientallenEnEenheden.split("en")[1];
-                eenheden = tientallenEnEenheden.split("en")[0];
-            } else {
-                console.log(number.Value.toString());
-                tientallen = number.Value.toString().substring(0,1);
-                eenheden = number.Value.toString().substring(1,2);
-            }
-            console.log("tientallen: " + tientallen);
-            console.log("eenheden: " + eenheden);
-        });
-
-
+        step.Items = this.SearchIndexesOfWordInLowerCaseInAssigment(assignment, this.WrittenNumbers, false);
+        step.Items.forEach(item => console.log(this.convertWrittenNumberToNumericNumber(item.Text, this.WrittenNumbers)));
+        console.log(step);
 
         solution.Steps.push(step);
         return solution;
@@ -90,12 +53,40 @@ export class CallGameService {
         return solution;
     }
 
+    private isWrittenNumber(word: string): boolean {
+        console.log(word);
+        console.log(this.WrittenNumbers.filter(wn => wn.Text.toLowerCase().indexOf(word.toLowerCase()) !== -1));
+        return this.WrittenNumbers.filter(wn => word.indexOf(wn.Text) !== -1).length > 0;
+    }
 
+    private convertWrittenNumberToNumericNumber(writtenNumber: string, dozens: Array<WrittenNumber>): Number {
+        var result: Number = 0;
+        console.clear();
+        
+        var writtenNumber = "zevenhonderd vijftien miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd veertien";
+        console.log(writtenNumber);
 
+        var miljards = new SplittedNumber(writtenNumber.trim().split("miljard")[0]);
+        console.log("miljarden: " + miljards.Hundreds?.toString() + miljards.Dozens?.toString() + miljards.Units?.toString());
 
+        // -> honderdtallen, tientallen en eenheden uithalen
+        /*
+        var miljoenen = new SplittedNumber(writtenNumber.split("miljard")[1].split("miljoen")[0].trim());
+        console.log("miljoenen: " + miljoenen);
 
+        // -> honderdtallen, tientallen en eenheden uithalen
+        var duizendtallen = new SplittedNumber(writtenNumber.split("miljard")[1].split("miljoen")[1].split("duizend")[0].trim());
+        console.log("duizenden: " + duizendtallen);
 
+        // -> honderdtallen, tientallen en eenheden uithalen
+        var honderden = new SplittedNumber(writtenNumber.split("miljard")[1].split("miljoen")[1].split("duizend")[1].trim());
+        console.log("honderden : " + honderden);
+        */
 
+        
+
+        return result;
+    }
 
     private solveRomanicNumbers(assignment: string, solution: Solution): Solution {
         var step = new Step("Tel alle romeinse cijfers op (I, V, X, L, C, D, M). Ook de geldige combinaties als VI, IX en CC");
@@ -121,7 +112,7 @@ export class CallGameService {
             if (wordLine === word + "bevat.") {
                 wordLine == "";
             }
-            
+
             this.stepIndex++;
         });
 
@@ -161,10 +152,11 @@ export class CallGameService {
         assignment: string,
         numberToSearch: Array<WrittenNumber>,
         crossWordSearch: Boolean): Array<FoundWrittenNumber> {
-            assignment = assignment.toLowerCase();
+        assignment = assignment.toLowerCase();
         var result = new Array<FoundWrittenNumber>();
-        numberToSearch.forEach(nts => {
-            if (crossWordSearch) {
+        console.log(crossWordSearch);
+        if (crossWordSearch) {
+            numberToSearch.forEach(nts => {
                 var numberCombinations = this.CreateWordCombinations(nts);
                 numberCombinations.forEach((key, value) => {
                     var indexOfKeyInAssignment = assignment.indexOf(value.toString());
@@ -174,29 +166,39 @@ export class CallGameService {
                         result.push(new FoundWrittenNumber(indexOfKeyInAssignment, writtenNumber, assignment));
                     }
                 });
-            }
-            else {
-                var words = assignment.split(" ");
-                words.forEach(word => {
-                    numberToSearch.forEach(nts => {
-                        
-                    });
-                });
-            }
-        });
-        console.log(result);
-
+            });
+        }
+        else {
+            var words = assignment.split(" ");
+            words.forEach(word => {
+                console.log(word);
+                if (isNaN(Number(word))) {
+                    var foundWrittenNumber = null;
+                    var isFoundWrittenNumberAlreadyPushed = false;
+                    var writtenNumber = this.WrittenNumbers
+                        .find(wn => wn.Text.toLowerCase().indexOf(word.toLowerCase()) !== -1);
+                    console.log(writtenNumber);
+                    if (writtenNumber !== undefined) {
+                        foundWrittenNumber = new FoundWrittenNumber(assignment.indexOf(word), writtenNumber, assignment);
+                        isFoundWrittenNumberAlreadyPushed = result.indexOf(foundWrittenNumber) !== -1;
+                    }
+                    if (writtenNumber !== undefined && !isFoundWrittenNumberAlreadyPushed && foundWrittenNumber !== null) {
+                        result.push(foundWrittenNumber);
+                    }
+                }
+            });
+        }
         return result.sort((a, b) => a.IndexOfOccurrence - b.IndexOfOccurrence);
     }
 
     private CreateWordCombinations(numberToSearch: WrittenNumber): Map<string, number> {
         var combinations = new Map<string, number>();
-        
+
         combinations.set(numberToSearch.Text, numberToSearch.Value);
 
         for (var indexOfSpacing = 1; indexOfSpacing <= numberToSearch.Text.length - 1; indexOfSpacing++) {
-            var key = 
-                numberToSearch.Text.substring(0, indexOfSpacing) + " " + 
+            var key =
+                numberToSearch.Text.substring(0, indexOfSpacing) + " " +
                 numberToSearch.Text.substring(indexOfSpacing);
             var value = numberToSearch.Value;
             combinations.set(key, value);
@@ -204,6 +206,7 @@ export class CallGameService {
 
         return combinations;
     }
+
 
     private InitiateWrittenNumbers() {
         this.WrittenNumbers.push(new WrittenNumber("nul", 0, "nul -> 0"));
