@@ -19,6 +19,8 @@ export class CallGameService {
         this.InitiateWrittenNumbers();
         this.InitiateRomanicNumbers();
         this.InitiateHiddenRomanicNumber();
+        var number = new SplittedNumber("");
+        number.test();
     }
 
     public solve(assignment: string): Solution {
@@ -26,8 +28,13 @@ export class CallGameService {
         this.stepIndex = 1;
         var solution = new Solution();
 
-        solution = this.solveNumbersWhichAppearInWithinWords(assignment, solution);
         
+
+
+
+
+        // solution = this.solveNumbersWhichAppearInWithinWords(assignment, solution);
+
         // solution = this.solveNumericNumbers(assignment, solution);
         // solution = this.solveRomanicNumbers(assignment, solution);
         // solution = this.SolveHiddenRomanicNumbers(assignment, solution);
@@ -62,12 +69,12 @@ export class CallGameService {
     private convertWrittenNumberToNumericNumber(writtenNumber: string, dozens: Array<WrittenNumber>): Number {
         var result: Number = 0;
         console.clear();
-        
-        var writtenNumber = "zevenhonderd vijftien miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd veertien";
+
+        var writtenNumber = "zevenhonderdvijftien miljard tweehonderdvijfendertig miljoen vierhonderd duizend zeshonderd veertien";
         console.log(writtenNumber);
 
-        var miljards = new SplittedNumber(writtenNumber.trim().split("miljard")[0]);
-        console.log("miljarden: " + miljards.Hundreds?.toString() + miljards.Dozens?.toString() + miljards.Units?.toString());
+        var miljards = new SplittedNumber(writtenNumber.split("miljard")[0]);
+        console.log("miljarden: " + miljards.result?.toString());
 
         // -> honderdtallen, tientallen en eenheden uithalen
         /*
@@ -83,7 +90,7 @@ export class CallGameService {
         console.log("honderden : " + honderden);
         */
 
-        
+
 
         return result;
     }
